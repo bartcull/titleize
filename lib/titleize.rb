@@ -17,9 +17,9 @@ module Titleize
   #
   #   "notes on a scandal" # => "Notes on a Scandal"
   #   "the good german"    # => "The Good German"
-  def titleize(title)
+  def titleize(title, opts={})
     title = title.dup
-    title.downcase! unless title[/[[:lower:]]/]  # assume all-caps need fixing
+    title.downcase! unless title[/[[:lower:]]/]  unless opts[:ignore_all_caps] # fix all-caps unless ignore_all_caps is set
 
     phrases(title).map do |phrase|
       words = phrase.split
@@ -120,7 +120,7 @@ if defined? ActiveSupport
       title = ActiveSupport::Inflector.underscore(title) if opts[:underscore]
       title = ActiveSupport::Inflector.humanize(title) if opts[:humanize]
 
-      Titleize.titleize(title)
+      Titleize.titleize(title, opts)
     end
     alias_method :titlecase, :titleize
   end

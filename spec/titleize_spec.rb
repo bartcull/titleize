@@ -134,6 +134,10 @@ describe Titleize do
       titleize("IF IT’S ALL CAPS, FIX IT").should == "If It’s All Caps, Fix It"
     end
 
+    it "should ignore all-caps if ignore_all_caps is true" do
+      titleize("IF IT’S ALL CAPS, FIX IT", { ignore_all_caps: true }).should == "IF IT’S ALL CAPS, FIX IT"
+    end
+    
     # test suite from Perl titlecase
     # http://github.com/ap/titlecase/blob/master/test.pl
     it "should handle edge cases" do
@@ -232,7 +236,7 @@ describe ActiveSupport::Inflector do
     before(:each) do
       @title = "active_record and ActiveResource"
     end
-
+    let(:opts) { {:humanize => true, :underscore => true} }
     it "should call humanize and underscore like the default in Rails" do
       underscored_title = "active_record and active_resource"
       humanized_title = "Active record and active resource"
@@ -256,16 +260,16 @@ describe ActiveSupport::Inflector do
     end
 
     it "should replace Inflector.titleize" do
-      Titleize.should_receive(:titleize).with(@title)
-      ActiveSupport::Inflector.stub!(:underscore).and_return(@title)
-      ActiveSupport::Inflector.stub!(:humanize).and_return(@title)
+      Titleize.should_receive(:titleize).with(@title, opts)
+      ActiveSupport::Inflector.stub(:underscore).and_return(@title)
+      ActiveSupport::Inflector.stub(:humanize).and_return(@title)
       ActiveSupport::Inflector.titleize(@title)
     end
 
     it "should be aliased as titlecase" do
       ActiveSupport::Inflector.singleton_methods.map(&:to_sym).should include(:titlecase)
-      ActiveSupport::Inflector.stub!(:titlecase).and_return("title")
-      ActiveSupport::Inflector.stub!(:titleize).and_return("title")
+      ActiveSupport::Inflector.stub(:titlecase).and_return("title")
+      ActiveSupport::Inflector.stub(:titleize).and_return("title")
       ActiveSupport::Inflector.titlecase("this").should == ActiveSupport::Inflector.titleize("this")
     end
   end
