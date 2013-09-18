@@ -135,7 +135,7 @@ describe Titleize do
     end
 
     it "should ignore all-caps if ignore_all_caps is true" do
-      titleize("IF IT’S ALL CAPS, FIX IT", { ignore_all_caps: true }).should == "IF IT’S ALL CAPS, FIX IT"
+      titleize("IF IT’S ALL CAPS, DO NOT FIX IT", { ignore_all_caps: true }).should == "IF IT’S ALL CAPS, DO NOT FIX IT"
     end
     
     # test suite from Perl titlecase
